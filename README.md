@@ -1,5 +1,5 @@
 # Task2-CatalogService
-.Net core 6 app with SQL, Xunit and EF to implement N-tier arch
+.Net core 6 app with SQL Express, Xunit and EF to implement N-tier arch
 
 Task:
 Create BLL (business logic layer) and DAL (data-access layer) for Catalog Service. You must follow Clean Architecture with physical layers separation (via separate DLLs).
