@@ -20,12 +20,21 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Get a list of Items.
+        /// Get a list of Items. 
+        /// CategoryId as optional filter.
+        /// Page as optional pagination (20 items per page)
         /// </summary>
         /// <returns>A list of Items.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Item>), 200)]
-        public IEnumerable<Item> Get() => _itemService.List();
+        public ActionResult<ItemResponse> Get(int? categoryId, int? page)
+        {
+            var items = _itemService.List(categoryId, page);
+            if (items != null)
+                return Ok(items);
+            else
+                return NotFound();
+        }
 
         /// <summary>
         /// Finds an Item by its Id

@@ -29,7 +29,7 @@ namespace CatalogService.Controllers
         public IEnumerable<Category> Get() => _categoryService.List();
 
         /// <summary>
-        /// Finds an Category by its Id
+        /// Finds a Category by its Id
         /// </summary>
         /// <param name="id">Number</param>
         /// <returns>An Categories</returns>
@@ -44,7 +44,7 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Inserts an Category
+        /// Inserts a Category
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpPost]
@@ -58,7 +58,7 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Updates an Category
+        /// Updates a Category
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpPut]
@@ -72,7 +72,7 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Deletes an Category by its Id
+        /// Deletes a Category by its Id
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpDelete("{id}")]

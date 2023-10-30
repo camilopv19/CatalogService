@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccessLayer.Entities
 {
@@ -14,4 +15,21 @@ namespace DataAccessLayer.Entities
         public decimal Price { get; set; }
         public int Amount { get; set; }
     }
+
+    public class ItemResponse : Item
+    {
+        public ItemResponse(Item item)
+        {
+            Id = item.Id;
+            Name = item.Name;
+            Description = item.Description;
+            Image = item.Image;
+            CategoryId = item.CategoryId;
+            Price = item.Price;
+            Amount = item.Amount;
+            Links = new List<LinkDto>();
+        }
+        public List<LinkDto> Links { get; set; } = new List<LinkDto>();
+    }
+
 }

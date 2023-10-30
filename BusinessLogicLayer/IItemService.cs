@@ -6,7 +6,7 @@ namespace BusinessLogicLayer
     {
         int Delete(int id);
         Item? Get(int id);
-        IEnumerable<Item> List();
+        IEnumerable<ItemResponse> List(int? categoryId, int? page);
         int Upsert(Item item);
     }
 }

@@ -20,11 +20,11 @@ namespace Tests
         {
             // Arrange
             var itemServiceMock = new Mock<IItemService>();
-            itemServiceMock.Setup(service => service.List()).Returns(new List<Item>());
+            itemServiceMock.Setup(service => service.List(null, null)).Returns(new List<ItemResponse>());
             var controller = new ItemsController(itemServiceMock.Object);
 
             // Act
-            var result = controller.Get();
+            var result = controller.Get(null, null);
 
             // Assert
             var okResult = Assert.IsAssignableFrom<IEnumerable<Item>>(result);

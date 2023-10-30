@@ -15,7 +15,7 @@ namespace BusinessLogicLayer
         {
             _repository = repository;
         }
-        public IEnumerable<Item> List() => _repository.List();
+        public IEnumerable<ItemResponse> List(int? categoryId, int? page) => _repository.List(categoryId, page);
 
         public Item? Get(int id) => _repository.Get(id);
         public int Delete(int id) => _repository.Delete(id);
