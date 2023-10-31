@@ -1,13 +1,11 @@
 ﻿using BusinessLogicLayer;
 using CatalogService.Controllers;
+using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
+using DataAccessLayer.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tests
 {
@@ -257,6 +255,38 @@ namespace Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(404, result.StatusCode); //Not Found status code
+        }
+
+        [Fact]
+        public void DeleteCategoryWithItems_DeletesItemsWithSameCategoryId()
+        {
+            // Arrange
+            var categoryId = 1;
+
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "in-memory-db")
+                .Options;
+
+            using (var context = new AppDbContext(options))
+            {
+                context.Categories.Add(new Category { Id = categoryId });
+                context.Items.Add(new Item { Id = 1, CategoryId = categoryId });
+                context.Items.Add(new Item { Id = 2, CategoryId = categoryId });
+                context.SaveChanges();
+            }
+
+            using (var context = new AppDbContext(options))
+            {
+                var categoryRepository = new CategoryRepository(context);
+                var result = categoryRepository.Delete(categoryId);
+
+                // Assert
+                Assert.Equal(3, result); // Total changes, including both category and items
+
+                Assert.Null(context.Categories.Find(categoryId));
+                Assert.Null(context.Items.Find(1));
+                Assert.Null(context.Items.Find(2));
+            }
         }
     }
 }

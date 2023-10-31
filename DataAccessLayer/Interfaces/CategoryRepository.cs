@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,12 @@ namespace DataAccessLayer.Interfaces
 
         public int Delete(int id)
         {
+
             var category = _dbContext.Categories.Find(id);
             if (category != null)
             {
+                var itemsToDelete = _dbContext.Items.Where(i => i.CategoryId == id);
+                _dbContext.Items.RemoveRange(itemsToDelete);
                 _dbContext.Categories.Remove(category);
             }
             return _dbContext.SaveChanges();
