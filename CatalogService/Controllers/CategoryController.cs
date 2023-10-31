@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CatalogService.Controllers
 {
     /// <Summary>
-    /// Category API.
+    /// Categories API.
     /// </Summary>
-    [Route("api/Category")]
+    [Route("api/Categories")]
     [ApiController]
     public class CategoryController : Controller
     {
