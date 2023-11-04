@@ -27,8 +27,8 @@ namespace Tests
             var result = controller.Get(null, null);
 
             // Assert
-            var okResult = Assert.IsAssignableFrom<IEnumerable<Item>>(result);
-            var items = Assert.IsAssignableFrom<IEnumerable<Item>>(okResult);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var items = Assert.IsAssignableFrom<IEnumerable<ItemResponse>>(okResult.Value);
             Assert.Empty(items);
         }
 

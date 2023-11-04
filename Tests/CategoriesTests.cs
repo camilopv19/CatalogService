@@ -26,8 +26,8 @@ namespace Tests
 
             // Assert
             var okResult = Assert.IsAssignableFrom<IEnumerable<Category>>(result);
-            var categorys = Assert.IsAssignableFrom<IEnumerable<Category>>(okResult);
-            Assert.Empty(categorys);
+            var categories = Assert.IsAssignableFrom<IEnumerable<Category>>(okResult);
+            Assert.Empty(categories);
         }
 
         [Fact]

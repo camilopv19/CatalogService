@@ -16,5 +16,25 @@ namespace DataAccessLayer.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configure the non-identity ID property in Category
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever(); // This prevents it from being an identity column
+                                                                  // Other configurations for the entity
+            });
+
+            // Configure the non-identity ID property in Item
+            modelBuilder.Entity<Item>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever(); // This prevents it from being an identity column
+                                                                  // Other configurations for the entity
+            });
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
