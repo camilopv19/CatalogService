@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CatalogService.Controllers
 {
     /// <Summary>
-    /// Category API.
+    /// Items API.
     /// </Summary>
     [Route("api/Items")]
     [ApiController]
@@ -17,6 +17,21 @@ namespace CatalogService.Controllers
         public ItemsController(IItemService itemService)
         {
             _itemService = itemService;
+        }
+
+        /// <summary>
+        /// Get a list of all Items.
+        /// </summary>
+        /// <returns>A list of all Items.</returns>
+        [HttpGet("all")] // You can customize the route as needed
+        [ProducesResponseType(typeof(IEnumerable<Item>), 200)]
+        public ActionResult<ItemResponse> GetAll()
+        {
+            var items = _itemService.List();
+            if (items != null)
+                return Ok(items);
+            else
+                return NotFound();
         }
 
         /// <summary>
@@ -70,11 +85,15 @@ namespace CatalogService.Controllers
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpPut]
-        public ActionResult<Item> Update(Item dto)
+        public ActionResult<string> Update(Item dto)
         {
             var result = _itemService.Upsert(dto);
             if (result > 0)
-                return NoContent();
+            {
+                var msgBroker = new MessageService();
+                msgBroker.Publish(dto);
+                return msgBroker.Publish(dto);
+            }
             else
                 return NotFound();
         }
