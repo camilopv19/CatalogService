@@ -1,6 +1,6 @@
 ﻿using DataAccessLayer.Entities;
 
-namespace BusinessLogicLayer
+namespace BusinessLogicLayer.CoreLogic
 {
     public interface IItemService
     {

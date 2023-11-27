@@ -1,4 +1,4 @@
-﻿using BusinessLogicLayer;
+﻿using BusinessLogicLayer.CoreLogic;
 using CatalogService.Controllers;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogicLayer
+namespace BusinessLogicLayer.CoreLogic
 {
     public class ItemService : IItemService
     {

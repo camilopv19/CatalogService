@@ -5,7 +5,7 @@ using DataAccessLayer.Entities;
 using RabbitMQ.Client;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace BusinessLogicLayer
+namespace BusinessLogicLayer.Messaging
 {
 
     public class MessageService : IMessageService

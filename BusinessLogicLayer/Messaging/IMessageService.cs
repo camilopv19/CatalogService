@@ -1,6 +1,6 @@
 ﻿using DataAccessLayer.Entities;
 
-namespace BusinessLogicLayer
+namespace BusinessLogicLayer.Messaging
 {
     public interface IMessageService
     {

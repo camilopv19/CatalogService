@@ -1,4 +1,4 @@
-﻿using BusinessLogicLayer;
+﻿using BusinessLogicLayer.CoreLogic;
 using CatalogService.Controllers;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
