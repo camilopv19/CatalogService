@@ -1,3 +1,13 @@
+# Task 4: Message Broker Publisher with RabbitMQ
+
+Run the project and update any Item with the PUT method. This will publish a new message to the message broker (RabbitMQ must be installed and the service running).
+
+Clone or checkout the last commit of the [Listener project](https://github.com/camilopv19/CartService), run it and see the console messages appear.
+
+The RabbitMQ configuration is in Fanout mode, so if any other Receiver client is listening, the message will be received too.
+This could be done by implementing the 3rd part of the [RabbitMQ C# tutorial](https://www.rabbitmq.com/tutorials/tutorial-three-dotnet.html), changing the exchange property from "logs" to "catalog" and running the project.
+
+
 # Task2-CatalogService
 .Net core 6 app with SQL Express, Xunit and EF to implement N-tier arch
 
