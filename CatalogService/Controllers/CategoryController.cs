@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer.CoreLogic;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,10 @@ namespace CatalogService.Controllers
     {
         private readonly ICategoryService _categoryService;
 
-        #pragma warning disable 1591
-        public CategoryController(ICategoryService cartService)
+#pragma warning disable 1591
+        public CategoryController(ICategoryService categoryService)
         {
-            _categoryService = cartService;
+            _categoryService = categoryService;
         }
 
         /// <summary>
@@ -26,7 +27,16 @@ namespace CatalogService.Controllers
         /// <returns>A list of Categories.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Category>), 200)]
-        public IEnumerable<Category> Get() => _categoryService.List();
+        public ActionResult<Category> Get()
+        {
+            // Get the user's role claim
+            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == "role" && c.Value == "Manager");
+            if (roleClaim == null)
+            {
+                return Unauthorized();
+            }
+            return Ok(_categoryService.List());
+        }
 
         /// <summary>
         /// Finds a Category by its Id

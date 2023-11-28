@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Interfaces
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
 
         private readonly AppDbContext _dbContext;
@@ -22,7 +22,7 @@ namespace DataAccessLayer.Interfaces
         {
             return Convert.ToBase64String(MD5.HashData(Encoding.UTF8.GetBytes(username)));
         }
-        public async Task<UserHash?> GetUserAsync(string username)
+        public async Task<Hashes?> GetByHashAsync(string username)
         {
             var hash = UserHash(username);
             return await _dbContext.Hashes
@@ -30,21 +30,35 @@ namespace DataAccessLayer.Interfaces
                         .FirstOrDefaultAsync();
         }
 
-        public async Task<int> AddAsync(User user)
+        public int AddAsync(User user)
         {
-            var hash = UserHash(user.UserName);
-            var userExists = await _dbContext.Hashes
-                        .Where(user => user.Hash == hash)
+            try
+            {
+                int result = 0;
+                var hash = UserHash(user.UserName);
+                var userExists = _dbContext.Hashes.Any(hashObj => hashObj.Hash == hash);
+                if (!userExists)
+                {
+                    var userHash = new Hashes { Hash = hash };
+                    user.Claims.Add(new UserClaim() { Type = "role", Value = user.Role });
+                    _dbContext.Hashes.Add(userHash);
+                    _dbContext.Users.Add(user);
+                    result = _dbContext.SaveChanges();
+                }
+                return result;
+            }
+            catch (Exception _e)
+            {
+
+                throw _e;
+            }
+
+        }
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            return await _dbContext.Users
+                        .Where(user => user.UserName == username)
                         .FirstOrDefaultAsync();
-            if (userExists != null)
-            {
-                _dbContext.Users.Add(user);
-            }
-            else
-            {
-                _dbContext.Users.Update(user);
-            }
-            return _dbContext.SaveChanges();
         }
     }
 }
