@@ -22,28 +22,22 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Get a list of Categories.
+        /// Get a list of Categories. Allowed roles: Manager, Buyer
         /// </summary>
         /// <returns>A list of Categories.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Category>), 200)]
-        public ActionResult<Category> Get()
-        {
-            // Get the user's role claim
-            var roleClaim = User.Claims.FirstOrDefault(c => c.Type == "role" && c.Value == "Manager");
-            if (roleClaim == null)
-            {
-                return Unauthorized();
-            }
-            return Ok(_categoryService.List());
-        }
+        //[Authorize]
+        [Authorize(Roles ="Manager, Buyer")]
+        public ActionResult<Category> Get() => Ok(_categoryService.List());
 
         /// <summary>
-        /// Finds a Category by its Id
+        /// Finds a Category by its Id. Allowed roles: Manager, Buyer
         /// </summary>
         /// <param name="id">Number</param>
         /// <returns>An Categories</returns>
         [HttpGet("{id}", Name = "GetCategory")]
+        [Authorize(Roles = "Manager, Buyer")]
         public ActionResult<Category> Get(int id)
         {
             var result = _categoryService.Get(id);
@@ -54,10 +48,11 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Inserts a Category
+        /// Inserts a Category. Only Manager
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public ActionResult<Category> Insert(Category dto)
         {
             var result = _categoryService.Upsert(dto);
@@ -68,10 +63,11 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Updates a Category
+        /// Updates a Category. Only Manager
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpPut]
+        [Authorize(Roles = "Manager")]
         public ActionResult<Category> Update(Category dto)
         {
             var result = _categoryService.Upsert(dto);
@@ -82,10 +78,11 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Deletes a Category by its Id
+        /// Deletes a Category by its Id. Only Manager
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public ActionResult<Category> Delete(int id)
         {
             var result = _categoryService.Delete(id);

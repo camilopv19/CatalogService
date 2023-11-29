@@ -2,6 +2,7 @@
 using BusinessLogicLayer.CoreLogic;
 using BusinessLogicLayer.Messaging;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogService.Controllers
@@ -22,11 +23,12 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Get a list of all Items.
+        /// Get a list of all Items. Allowed roles: Manager, Buyer
         /// </summary>
         /// <returns>A list of all Items.</returns>
         [HttpGet("all")] // You can customize the route as needed
         [ProducesResponseType(typeof(IEnumerable<Item>), 200)]
+        [Authorize(Roles = "Manager, Buyer")]
         public ActionResult<ItemResponse> GetAll()
         {
             var items = _itemService.List();
@@ -39,11 +41,13 @@ namespace CatalogService.Controllers
         /// <summary>
         /// Get a list of Items. 
         /// CategoryId as optional filter.
-        /// Page as optional pagination (20 items per page)
+        /// Page as optional pagination (20 items per page).
+        /// Allowed roles: Manager, Buyer
         /// </summary>
         /// <returns>A list of Items.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Item>), 200)]
+        [Authorize(Roles = "Manager, Buyer")]
         public ActionResult<ItemResponse> Get(int? categoryId, int? page)
         {
             var items = _itemService.List(categoryId, page);
@@ -54,11 +58,12 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Finds an Item by its Id
+        /// Finds an Item by its Id. Allowed roles: Manager, Buyer
         /// </summary>
         /// <param name="id">Integer.</param>
         /// <returns>An Item</returns>
         [HttpGet("{id}", Name = "GetItems")]
+        [Authorize(Roles = "Manager, Buyer")]
         public ActionResult<Item> Get(int id)
         {
             var result = _itemService.Get(id);
@@ -69,10 +74,11 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Inserts an Item
+        /// Inserts an Item. Only Manager
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public ActionResult<Item> Insert(Item dto)
         {
             var result = _itemService.Upsert(dto);
@@ -83,10 +89,11 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Updates an Item
+        /// Updates an Item. Only Manager
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpPut]
+        [Authorize(Roles = "Manager")]
         public ActionResult<string> Update(Item dto)
         {
             var result = _itemService.Upsert(dto);
@@ -101,10 +108,11 @@ namespace CatalogService.Controllers
         }
 
         /// <summary>
-        /// Deletes an Item by its Id
+        /// Deletes an Item by its Id. Only Manager
         /// </summary>
         /// <returns>The number of affected rows in DB</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public ActionResult<Item> Delete(int id)
         {
             var result = _itemService.Delete(id);

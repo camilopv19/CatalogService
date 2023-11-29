@@ -1,10 +1,12 @@
 ﻿using BusinessLogicLayer.Identity;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace CatalogService.Controllers
 {
@@ -16,11 +18,13 @@ namespace CatalogService.Controllers
         private readonly IPasswordHasher<User> hasher;
         private readonly IUserService _userService;
         private readonly HttpContext ctx;
-        public AccountController(IPasswordHasher<User> _hasher, IHttpContextAccessor _ctxAccesor, IUserService userService)
+        private readonly IHttpClientFactory _httpClientFactory;
+        public AccountController(IPasswordHasher<User> _hasher, IHttpContextAccessor _ctxAccesor, IUserService userService, IHttpClientFactory httpClientFactory)
         {
             hasher = _hasher;
             ctx = _ctxAccesor.HttpContext;
             _userService = userService;
+            _httpClientFactory = httpClientFactory;
         }
         /// <summary>
         /// Register a user
@@ -51,14 +55,45 @@ namespace CatalogService.Controllers
                 {
                     return "Bad credentials";
                 }
-
+                var convertedUser = UserHelper.Convert(user);
                 await ctx.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
-                    UserHelper.Convert(user)
+                    convertedUser
                     );
                 return "Logged in";
             }
             return "Bad credentials";
+        }
+
+        /// <summary>
+        /// Get access token
+        /// </summary>
+        [HttpGet("GetToken")]
+        public async Task<IActionResult> GetToken()
+        {
+            // Retrieve access token
+            var srvrClient = _httpClientFactory.CreateClient();
+            var discoveryDoc = await srvrClient.GetDiscoveryDocumentAsync("https://localhost:7297/");
+            var tokenResponse = await srvrClient.RequestClientCredentialsTokenAsync(
+                new ClientCredentialsTokenRequest
+                {
+                    Address = discoveryDoc.TokenEndpoint,
+                    ClientId = "oauthClient",
+                    ClientSecret = "client_secret",
+                    Scope = "api1.read",
+                });
+
+            // Retrieve secret data
+            var apiClient = _httpClientFactory.CreateClient();
+            apiClient.SetBearerToken(tokenResponse.AccessToken);
+            var response = await apiClient.GetAsync("https://localhost:7297/secret");
+            var content = await response.Content.ReadAsStringAsync();
+
+            return Ok(new
+            {
+                token = tokenResponse.AccessToken,
+                message = content
+            });
         }
     }
 }

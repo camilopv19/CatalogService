@@ -18,17 +18,39 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
-builder.Services.AddIdentityServer();
-builder.Services.AddAuthorization( builder =>
+//builder.Services.AddAuthentication("Bearer")
+//    .AddJwtBearer("Bearer", options =>
+//    {
+//        options.Audience = "api1";
+//        options.Authority = "https://localhost:7297";
+//    })
+//    .AddCookie("cookie");
+builder.Services.AddHttpClient();
+builder.Services.AddAuthentication(options =>
+     {
+         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+         options.DefaultChallengeScheme = "oidc";
+     })
+    .AddCookie()
+    .AddOpenIdConnect("oidc", options =>
+    {
+        options.Authority = "https://localhost:7297";
+        options.ClientId = "oauthClient";
+        options.ClientSecret = "client_secret";
+        options.ResponseType = "code";
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.SaveTokens = true;
+    });
+builder.Services.AddAuthorization(builder =>
 {
-    builder.AddPolicy(MANAGER_ROLE, policyBuilder =>
+    builder.AddPolicy("ManagerRole", policyBuilder =>
     {
         policyBuilder.RequireAuthenticatedUser()
         .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
         .RequireClaim("role", MANAGER_ROLE);
     });
-    builder.AddPolicy(BUYER_ROLE, policyBuilder =>
+    builder.AddPolicy("BuyerRole", policyBuilder =>
     {
         policyBuilder.RequireAuthenticatedUser()
         .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -70,9 +92,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseIdentityServer();
 
 app.MapControllers();
 

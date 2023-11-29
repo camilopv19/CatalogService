@@ -43,7 +43,7 @@ namespace DataAccessLayer.Entities
             var claims = new List<Claim>()
             {
                 new Claim("username", user.UserName),
-                new Claim("role", user.Role)
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             claims.AddRange(user.Claims.Select(c => new Claim(c.Type, c.Value)));
