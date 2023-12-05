@@ -1,3 +1,11 @@
+# Task 5: Identity Management System
+
+Run the projects: Identity and CatalogService.
+
+On CatalogService app register some users with several roles (Manager and Buyer at least), then try to consume the items or categories endpoints so test the roles. Current register logic ends with the user logged in.
+
+Whenever a role or user change is needed, it's only matter of logging in with another user or registering a new one.
+
 # Task 4: Message Broker Publisher with RabbitMQ
 
 Run the project and update any Item with the PUT method. This will publish a new message to the message broker (RabbitMQ must be installed and the service running).
