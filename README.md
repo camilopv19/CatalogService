@@ -1,3 +1,14 @@
+# Task 6: Ocelot API Gateway
+Clone or checkout the last commit of the [Carting solution](https://github.com/camilopv19/CartService) and run it.
+
+In this solution, run: CatalogService and APIGateway projects.
+
+Point the Catalog and Carting endpoints ports to the APIGateway port, then login or register as valid roles (according task 5), copy the retrieved token string and paste it in every Catalog endpoint as Bearer token authorization scheme.
+
+NFR's implemented: 
+1) New dictionary endpoint added with hardcoded result.
+2) 1 minute cache for all CatalogService endpoints.
+
 # Task 5: Identity Management System
 
 Run the projects: Identity and CatalogService.
