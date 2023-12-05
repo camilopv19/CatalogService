@@ -1,8 +1,15 @@
 ﻿using BusinessLogicLayer.CoreLogic;
 using DataAccessLayer.Entities;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace CatalogService.Controllers
 {
@@ -14,11 +21,13 @@ namespace CatalogService.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
+        private readonly HttpContext ctx;
 
 #pragma warning disable 1591
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IHttpContextAccessor _ctxAccesor)
         {
             _categoryService = categoryService;
+            ctx = _ctxAccesor.HttpContext;
         }
 
         /// <summary>
@@ -27,9 +36,32 @@ namespace CatalogService.Controllers
         /// <returns>A list of Categories.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Category>), 200)]
-        //[Authorize]
-        [Authorize(Roles ="Manager, Buyer")]
-        public ActionResult<Category> Get() => Ok(_categoryService.List());
+        [Authorize(Roles = "Manager, Buyer")]
+        public ActionResult<Category> Get()
+        {
+            var authorizationHeaders = HttpContext.Request.Headers["Authorization"];
+            //var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var roleClaim = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (authorizationHeaders.Count > 0)
+            {
+                var headers = authorizationHeaders.ToString();
+                // Validate the authorization header and access token
+                if (!string.IsNullOrEmpty(headers) && headers.StartsWith("Bearer "))
+                {
+                    var token = headers.Substring("Bearer ".Length).Trim();
+
+                    // Perform token validation logic (e.g., validate the signature, check expiration)
+                    if (ValidateToken(token))
+                    {
+                        return Ok(_categoryService.List());
+                    }
+                }
+            }
+            ctx.Response.StatusCode = 401; // Unauthorized
+            return Unauthorized();
+        }
+
 
         /// <summary>
         /// Finds a Category by its Id. Allowed roles: Manager, Buyer
@@ -90,6 +122,36 @@ namespace CatalogService.Controllers
                 return NoContent();
             else
                 return NotFound();
+        }
+
+        private bool ValidateToken(string token)
+        {
+            // Implement your token validation logic
+            // Example using JwtSecurityTokenHandler (make sure to install the necessary NuGet package)
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                // Set your token validation parameters (issuer, audience, signing key, etc.)
+                // Example:
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("MyAnonymousAndSecuredSecretKey"))
+            };
+
+            try
+            {
+                SecurityToken validatedToken;
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+                return true; // Token is valid
+            }
+            catch (Exception ex)
+            {
+                // Token validation failed
+                Console.WriteLine($"Token validation failed: {ex.Message}");
+                return false;
+            }
         }
     }
 }

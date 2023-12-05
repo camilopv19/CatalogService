@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using System.Text;
 
 namespace CatalogService.Controllers
 {
@@ -45,24 +48,24 @@ namespace CatalogService.Controllers
         /// User Login
         /// </summary>
         [HttpGet("login")]
-        public async Task<string> Login(string username, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
             var user = await _userService.GetByUsernameAsync(username);
             if (user != null)
             {
-                var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
-                if (result == PasswordVerificationResult.Failed)
-                {
-                    return "Bad credentials";
-                }
-                var convertedUser = UserHelper.Convert(user);
-                await ctx.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    convertedUser
+                var secretKey = "MyAnonymousAndSecuredSecretKey";
+                var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+
+                var jwt = new JwtSecurityToken(
+                    claims: UserHelper.BuildClaims(user),
+                    expires: DateTime.UtcNow.AddMinutes(15),
+                    signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512)
                     );
-                return "Logged in";
+
+                var token = new JwtSecurityTokenHandler().WriteToken(jwt);
+                return Ok(token);
             }
-            return "Bad credentials";
+            return Unauthorized("Bad credentials");
         }
 
         /// <summary>

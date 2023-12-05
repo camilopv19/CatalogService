@@ -1,0 +1,180 @@
+{
+  "Routes": [
+    // Categories API
+    {
+      "DownstreamPathTemplate": "/api/Categories/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7191
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Categories/",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 60 // 1 minute cache duration
+      },
+      "UpstreamSwagger": "https://localhost:7191/swagger/v1/swagger.json" // Added Swagger URL
+    },
+
+    // Categories by Id
+    {
+      "DownstreamPathTemplate": "/api/Categories/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7191
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 60 // 1 minute cache duration
+      },
+      "UpstreamPathTemplate": "/api/Categories/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamSwagger": "https://localhost:7191/swagger/v1/swagger.json" // Added Swagger URL
+    },
+
+    // Items API
+    {
+      "FileCacheOptions": {
+        "TtlSeconds": 60 // 1 minute cache duration
+      },
+      "DownstreamPathTemplate": "/api/Items/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7191
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/Items/all",
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamSwagger": "https://localhost:7191/swagger/v1/swagger.json" // Added Swagger URL
+    },
+
+    // Items by Query params
+    {
+      "DownstreamPathTemplate": "/api/Items/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7191
+        }
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60 // 1 minute cache duration
+      },
+      "UpstreamPathTemplate": "/api/Items/",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "DownstreamQueryString": {
+        "categoryId": "{categoryId}",
+        "page": "{page}"
+      },
+      "UpstreamSwagger": "https://localhost:7191/swagger/v1/swagger.json" // Added Swagger URL
+    },
+
+    // Items by Id
+    {
+      "Key": "catalog-item",
+      "DownstreamPathTemplate": "/api/Items/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7191
+        }
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60 // 1 minute cache duration
+      },
+      "UpstreamPathTemplate": "/api/Items/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamSwagger": "https://localhost:7191/swagger/v1/swagger.json" // Added Swagger URL
+    },
+
+    // Carting API
+    {
+      "DownstreamPathTemplate": "/api/v1/carts",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7135
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/carts",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamSwagger": "https://localhost:7135/swagger/v1/swagger.json" // Added Swagger URL
+    },
+
+    // Carts by Id
+    {
+      "DownstreamPathTemplate": "/api/v1/carts/{cartId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7135
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/carts/{cartId}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamSwagger": "https://localhost:7135/swagger/v1/swagger.json" // Added Swagger URL
+    },
+    // Cart Item by Id
+    {
+      "Key": "cart-item",
+      "DownstreamPathTemplate": "/api/v1/carts/item/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7135
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/carts/item/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamSwagger": "https://localhost:7135/swagger/v1/swagger.json" // Added Swagger URL
+    },
+    //Categories: Login
+    {
+      "DownstreamPathTemplate": "/login/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7191
+        }
+      ],
+      "UpstreamPathTemplate": "/login/",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "Aggregates": [
+    {
+      "UpstreamPathTemplate": "/api/Itemsdetails/{id}",
+      "DownstreamPathTemplate": null,
+      "Key": "catalog-item-details",
+      "RouteKeys": [ "catalog-item", "cart-item" ],
+      "QoSOptions": {
+        "TimeoutValue": 30000,
+        "TimeoutStrategy": 0
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7259"
+  }
+}

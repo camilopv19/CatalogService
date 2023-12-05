@@ -50,5 +50,12 @@ namespace DataAccessLayer.Entities
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             return new ClaimsPrincipal(identity);
         }
+        public static Claim[] BuildClaims(User user)
+        {
+            return new[]
+            {
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+        }
     }
 }

@@ -4,12 +4,13 @@ using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
-string MANAGER_ROLE = "Manager";
-string BUYER_ROLE = "Buyer";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,45 +19,21 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddAuthentication("Bearer")
-//    .AddJwtBearer("Bearer", options =>
-//    {
-//        options.Audience = "api1";
-//        options.Authority = "https://localhost:7297";
-//    })
-//    .AddCookie("cookie");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("MyAnonymousAndSecuredSecretKey")),
+                        ClockSkew = new System.TimeSpan(0)
+                    };
+                });
+
 builder.Services.AddHttpClient();
-builder.Services.AddAuthentication(options =>
-     {
-         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-         options.DefaultChallengeScheme = "oidc";
-     })
-    .AddCookie()
-    .AddOpenIdConnect("oidc", options =>
-    {
-        options.Authority = "https://localhost:7297";
-        options.ClientId = "oauthClient";
-        options.ClientSecret = "client_secret";
-        options.ResponseType = "code";
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-        options.SaveTokens = true;
-    });
-builder.Services.AddAuthorization(builder =>
-{
-    builder.AddPolicy("ManagerRole", policyBuilder =>
-    {
-        policyBuilder.RequireAuthenticatedUser()
-        .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
-        .RequireClaim("role", MANAGER_ROLE);
-    });
-    builder.AddPolicy("BuyerRole", policyBuilder =>
-    {
-        policyBuilder.RequireAuthenticatedUser()
-        .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
-        .RequireClaim("role", BUYER_ROLE);
-    });
-});
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();

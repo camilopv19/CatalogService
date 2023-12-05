@@ -6,9 +6,10 @@ using IdentityServer4.Test;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Net.Http;
 using System.Reflection;
-
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,13 +54,18 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders(); ;
 
 //Identity server
+//var secretKey = "api-secret"; // Replace this with your actual secret key
+//var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+//var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+
 builder.Services.AddIdentityServer()
     .AddInMemoryClients(IdentityServerConfig.GetClients())
     .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
     .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
     .AddInMemoryApiScopes(IdentityServerConfig.GetApiScopes())
-    .AddDeveloperSigningCredential()
     .AddTestUsers(IdentityServerConfig.GetUsers())
+    .AddDeveloperSigningCredential()
+    //.AddSigningCredential(signingCredentials)
     .AddJwtBearerClientAuthentication();
     //.AddAspNetIdentity<IdentityUser>()
     //.AddOperationalStore(options => options.ConfigureDbContext =

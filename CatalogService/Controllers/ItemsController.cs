@@ -16,10 +16,30 @@ namespace CatalogService.Controllers
     {
         private readonly IItemService _itemService;
 
-        #pragma warning disable 1591
+#pragma warning disable 1591
         public ItemsController(IItemService itemService)
         {
             _itemService = itemService;
+        }
+
+        /// <summary>
+        /// Get a default, hardcoded Item by dictionary search
+        /// </summary>
+        /// <returns>Same Item</returns>
+        [HttpGet("GetItem")]
+        public ActionResult<Item> GetItem([FromQuery] Dictionary<string, string> queryParams)
+        {
+            // Hardcoded response for reference
+            var response = new Item(){
+                Name = $"{queryParams.First().Key} = {queryParams.First().Value}",
+                Description = $"{queryParams.ElementAt(1).Key} = {queryParams.ElementAt(1).Value}",
+                Image = $"{string.Join(", ", queryParams.Keys)}",
+                CategoryId = 0,
+                Price = 99.9m,
+                Amount = 10
+            };
+
+            return Ok(response);
         }
 
         /// <summary>
