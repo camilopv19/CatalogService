@@ -1,0 +1,474 @@
+{
+	"info": {
+		"_postman_id": "560000fe-5bd0-4fef-b9c7-686e5c0b39b1",
+		"name": "Task2-Catalog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14201604"
+	},
+	"item": [
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCdXllciIsImV4cCI6MTcwMTc1NDg1MH0.hbgtfUpj-cNdP-mUkP0iLz-XakA7Hgpu8tcsPy-276F1Nb0n6hPAB2rbfYFQWUY_SDcJD_kuK6E0UwNVXUJE9A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Categories/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Categories/1554",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Categories",
+								"1554"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 10,\r\n        \"name\": \"Ocelot2\",\r\n        \"image\": \"OcelotImg2\",\r\n        \"parentCategoryId\": 101\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Categories?id=0&name=Ocelot&image=OcelotIMg&parentCategoryId=11",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Categories"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "0"
+								},
+								{
+									"key": "name",
+									"value": "Ocelot"
+								},
+								{
+									"key": "image",
+									"value": "OcelotIMg"
+								},
+								{
+									"key": "parentCategoryId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 10,\r\n    \"name\": \"Ocelot6\",\r\n    \"image\": \"OcelotImg6\",\r\n    \"parentCategoryId\": 11\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Categories",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Categories/10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Categories",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Item",
+			"item": [
+				{
+					"name": "Get by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Items/150",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Items",
+								"150"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Dictionary (Ocelot task)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Items/GetItem?page=2&cast=0",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Items",
+								"GetItem"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "cast",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by CategoryId and Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Items?categoryId=66&page=1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Items"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "66"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 6622,\r\n  \"name\": \"Ocelot\",\r\n  \"description\": \"Ocelot\",\r\n  \"image\": \"Ocelot\",\r\n  \"categoryId\": 66,\r\n  \"price\": 1110,\r\n  \"amount\": 1110\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Items",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 6622,\r\n    \"name\": \"Ocelot66222\",\r\n    \"description\": \"Ocelot66222\",\r\n    \"image\": \"Ocelot66222\",\r\n    \"categoryId\": 6336,\r\n    \"price\": 10,\r\n    \"amount\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Items",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Items/6622",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Items",
+								"6622"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjY1NTI1NTZCRUUzNzExRDRGRDk2QzMyQjFBRDE1QkY3IiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE3MDEyMjg2ODYsImV4cCI6MTcwMTIzMjI4NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzI5NyIsImF1ZCI6ImFwaTEiLCJjbGllbnRfaWQiOiJvYXV0aENsaWVudCIsImp0aSI6IjVGMjJBNjk1MkVGQ0JFRkI5NzM1MkQ5Q0QyRkNBNjVEIiwiaWF0IjoxNzAxMjI4Njg2LCJzY29wZSI6WyJhcGkxLnJlYWQiXX0.J2huaZof776JQOxemYY303UjCzV4rO9otC9OOsiEYCRdpcTRb7W8M9VNBiC88cwul1XrB4U6dtqgdftrV-R3aIOofrzKgJIQ2L8HKq7rY2oxOz1dnY5JKJhEJl6M4AoBaxo-c_BVFnOB7ie0hZqksFvzl5Im6hyIFOVKYVoqR_JQww-DFezNlY0xziVGYMnd9jNMhbifOQP_IA8WIgJQA1X6aL4i6V2GPVkNdfnyYPbK3POOyI8mVzNdJA9XBYZrvDXS9hhoAfhfOmyl8lpYOcHDLBjGhvUuTIyICZR2DyIxHF5MK8fmL_8fTt0r-WrvxTVoRAeZJQtlenziryP9YQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:{{port}}/api/Items/all",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Items",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get access token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "api1.read",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "oauthClient",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "client_secret",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:{{port}}/connect/token",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:{{port}}/login?username=buy&password=123",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "buy"
+						},
+						{
+							"key": "password",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Item Details (Ocelot aggregate)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:{{port}}/api/Itemsdetails/150",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"Itemsdetails",
+						"150"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
