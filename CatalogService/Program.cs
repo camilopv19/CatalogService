@@ -57,6 +57,7 @@ builder.Services.AddSwaggerGen(options =>
     // Include XML comments
     options.IncludeXmlComments(".\\obj\\Debug\\net6.0\\CatalogService.xml");
 });
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 
