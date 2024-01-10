@@ -1,5 +1,6 @@
 using BusinessLogicLayer.CoreLogic;
 using BusinessLogicLayer.Identity;
+using CatalogService.GraphQL;
 using CatalogService.Telemetry;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
@@ -33,7 +34,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     };
                 });
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:InstrumentationKey"]);
-builder.Services.AddSingleton<CatalogService.Telemetry.ITelemetryInitializer, TelemetryInitializer>();
+builder.Services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
+builder.Services.AddGraphQLServer()
+    .RegisterService<CategoryService>()
+            .AddQueryType<Query>();
 
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
@@ -77,5 +81,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGraphQL();
 
 app.Run();
