@@ -2,6 +2,7 @@
 using BusinessLogicLayer.CoreLogic;
 using BusinessLogicLayer.Messaging;
 using DataAccessLayer.Entities;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +16,13 @@ namespace CatalogService.Controllers
     public class ItemsController : Controller
     {
         private readonly IItemService _itemService;
+        private readonly TelemetryClient telemetryClient;
 
 #pragma warning disable 1591
-        public ItemsController(IItemService itemService)
+        public ItemsController(IItemService itemService, TelemetryClient telemetryClient)
         {
             _itemService = itemService;
+            this.telemetryClient = telemetryClient;
         }
 
         /// <summary>
@@ -38,7 +41,7 @@ namespace CatalogService.Controllers
                 Price = 99.9m,
                 Amount = 10
             };
-
+            telemetryClient.TrackEvent("GetMockItem");
             return Ok(response);
         }
 
@@ -53,7 +56,10 @@ namespace CatalogService.Controllers
         {
             var items = _itemService.List();
             if (items != null)
+            {
+                telemetryClient.TrackEvent("GetAllItems");
                 return Ok(items);
+            }
             else
                 return NotFound();
         }
@@ -72,7 +78,10 @@ namespace CatalogService.Controllers
         {
             var items = _itemService.List(categoryId, page);
             if (items != null)
+            {
+                telemetryClient.TrackEvent("Get Item by CategoryId, paginated");
                 return Ok(items);
+            }
             else
                 return NotFound();
         }
@@ -88,7 +97,10 @@ namespace CatalogService.Controllers
         {
             var result = _itemService.Get(id);
             if (result != default)
+            {
+                telemetryClient.TrackEvent("Get Item by Id");
                 return Ok(_itemService.Get(id));
+            }
             else
                 return NotFound();
         }
@@ -103,7 +115,10 @@ namespace CatalogService.Controllers
         {
             var result = _itemService.Upsert(dto);
             if (result != 0)
+            {
+                telemetryClient.TrackEvent("Insert item");
                 return CreatedAtAction("Insert", _itemService.Get(dto.Id));
+            }
             else
                 return BadRequest();
         }
@@ -119,6 +134,7 @@ namespace CatalogService.Controllers
             var result = _itemService.Upsert(dto);
             if (result > 0)
             {
+                telemetryClient.TrackEvent("Update item");
                 var msgBroker = new MessageService();
                 msgBroker.Publish(dto);
                 return msgBroker.Publish(dto);
@@ -137,7 +153,10 @@ namespace CatalogService.Controllers
         {
             var result = _itemService.Delete(id);
             if (result > 0)
+            {
+                telemetryClient.TrackEvent("Delete item");
                 return NoContent();
+            }
             else
                 return NotFound();
         }

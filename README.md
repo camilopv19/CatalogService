@@ -1,7 +1,7 @@
 # Task 7: APM tools - Azure Application Insights
-Clone or checkout the last commit, configure an Azure account and create an Application Insights app, copy the Connection string into the project appsettings.json file, ApplicationInsights.ConnectionString object and run the API.
+Clone or checkout the last commit, configure an Azure account and create an Application Insights app, go to the project appsettings.json file, provide ConnectionString and InstrumentationKey inside the ApplicationInsights object and run the API.
 
-Hitting the endpoints will generate traces and logs.
+Hitting the endpoints will generate traces, logs and the custom event called "GetAllCategories".
 
 # Task 6: Ocelot API Gateway
 Clone or checkout the last commit of the [Carting solution](https://github.com/camilopv19/CartService) and run it.

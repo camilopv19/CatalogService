@@ -1,6 +1,7 @@
 ﻿using BusinessLogicLayer.CoreLogic;
 using DataAccessLayer.Entities;
 using IdentityModel;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -22,12 +23,16 @@ namespace CatalogService.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly HttpContext ctx;
+        private readonly TelemetryClient telemetryClient;
 
 #pragma warning disable 1591
-        public CategoryController(ICategoryService categoryService, IHttpContextAccessor _ctxAccesor)
+        public CategoryController(ICategoryService categoryService, IHttpContextAccessor _ctxAccesor, TelemetryClient telemetryClient)
         {
             _categoryService = categoryService;
+#pragma warning disable CS8601 // Possible null reference assignment.
             ctx = _ctxAccesor.HttpContext;
+#pragma warning restore CS8601 // Possible null reference assignment.
+            this.telemetryClient = telemetryClient;
         }
 
         /// <summary>
@@ -54,6 +59,8 @@ namespace CatalogService.Controllers
                     // Perform token validation logic (e.g., validate the signature, check expiration)
                     if (ValidateToken(token))
                     {
+                        // Track a custom event
+                        telemetryClient.TrackEvent("GetAllCategories");
                         return Ok(_categoryService.List());
                     }
                 }
@@ -74,7 +81,10 @@ namespace CatalogService.Controllers
         {
             var result = _categoryService.Get(id);
             if (result != default)
+            {
+                telemetryClient.TrackEvent("GetCategoryById");
                 return Ok(_categoryService.Get(id));
+            }
             else
                 return NotFound();
         }
@@ -89,7 +99,10 @@ namespace CatalogService.Controllers
         {
             var result = _categoryService.Upsert(dto);
             if (result != 0)
+            {
+                telemetryClient.TrackEvent("InsertCategory");
                 return CreatedAtAction("Insert", _categoryService.Get(dto.Id));
+            }
             else
                 return BadRequest();
         }
@@ -104,7 +117,10 @@ namespace CatalogService.Controllers
         {
             var result = _categoryService.Upsert(dto);
             if (result > 0)
+            {
+                telemetryClient.TrackEvent("UpdateCategory");
                 return NoContent();
+            }
             else
                 return NotFound();
         }
@@ -119,7 +135,10 @@ namespace CatalogService.Controllers
         {
             var result = _categoryService.Delete(id);
             if (result > 0)
+            {
+                telemetryClient.TrackEvent("DeleteCategory");
                 return NoContent();
+            }
             else
                 return NotFound();
         }
