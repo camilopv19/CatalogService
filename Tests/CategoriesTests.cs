@@ -3,6 +3,8 @@ using CatalogService.Controllers;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
+using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -18,8 +20,10 @@ namespace Tests
         {
             // Arrange
             var categoryServiceMock = new Mock<ICategoryService>();
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             categoryServiceMock.Setup(service => service.List()).Returns(new List<Category>());
-            var controller = new CategoryController(categoryServiceMock.Object);
+            var controller = new CategoryController(categoryServiceMock.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Act
             var result = controller.Get();
@@ -35,8 +39,10 @@ namespace Tests
         {
             // Arrange
             var categoryServiceMock = new Mock<ICategoryService>();
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             categoryServiceMock.Setup(service => service.Get(It.IsAny<int>())).Returns(new Category());
-            var controller = new CategoryController(categoryServiceMock.Object);
+            var controller = new CategoryController(categoryServiceMock.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Act
             var result = controller.Get(1); // Provide a valid ID
@@ -49,9 +55,11 @@ namespace Tests
         public void Get_ReturnsNotFound_WhenInvalidIdProvided()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var categoryServiceMock = new Mock<ICategoryService>();
             categoryServiceMock.Setup(service => service.Get(It.IsAny<int>())).Returns(null as Category);
-            var controller = new CategoryController(categoryServiceMock.Object);
+            var controller = new CategoryController(categoryServiceMock.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Act
             var result = controller.Get(999); // Provide an invalid ID
@@ -64,8 +72,10 @@ namespace Tests
         public void Get_ReturnsOkResult_WhenCategoryFound()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var categoryServiceMock = new Mock<ICategoryService>();
-            var controller = new CategoryController(categoryServiceMock.Object);
+            var controller = new CategoryController(categoryServiceMock.Object, httpContextMock.Object, telemetryClientMock.Object);
             var categoryId = 1; // Sample category ID for testing
             var categoryToReturn = new Category
             {
@@ -90,8 +100,10 @@ namespace Tests
         public void Insert_ReturnsBadRequest()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Upsert method to return the default id (e.g., 0)
             mockCategoryService.Setup(service => service.Upsert(It.IsAny<Category>()))
@@ -110,8 +122,10 @@ namespace Tests
         public void Insert_ReturnsCreatedAtAction()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Upsert method to return a non-default id
             mockCategoryService.Setup(service => service.Upsert(It.IsAny<Category>()))
@@ -132,8 +146,10 @@ namespace Tests
         public void Update_ReturnsNoContent()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Upsert method to return a positive result
             mockCategoryService.Setup(service => service.Upsert(It.IsAny<Category>()))
@@ -153,8 +169,10 @@ namespace Tests
         public void Update_ReturnsNotFound()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Upsert method to return 0, indicating a failure
             mockCategoryService.Setup(service => service.Upsert(It.IsAny<Category>()))
@@ -174,8 +192,10 @@ namespace Tests
         public void Delete_ReturnsNoContent()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Delete method to return a value greater than 0
             mockCategoryService.Setup(service => service.Delete(It.IsAny<int>()))
@@ -195,8 +215,10 @@ namespace Tests
         public void Delete_ReturnsNotFound()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Delete method to return 0 to simulate failure
             mockCategoryService.Setup(service => service.Delete(It.IsAny<int>()))
@@ -216,8 +238,10 @@ namespace Tests
         public void GetById_ReturnsOk()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Get method to return a non-default result
             var mockCategory = new Category { Id = 1, Name = "Sample Category" };  // Replace with your category details
@@ -240,8 +264,10 @@ namespace Tests
         public void GetById_ReturnsNotFound()
         {
             // Arrange
+            var httpContextMock = new Mock<IHttpContextAccessor>();
+            var telemetryClientMock = new Mock<TelemetryClient>();
             var mockCategoryService = new Mock<ICategoryService>();
-            var controller = new CategoryController(mockCategoryService.Object);
+            var controller = new CategoryController(mockCategoryService.Object, httpContextMock.Object, telemetryClientMock.Object);
 
             // Mock the Get method to return the default (null or default value)
             mockCategoryService.Setup(service => service.Get(It.IsAny<int>()))
