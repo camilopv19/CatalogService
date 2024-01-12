@@ -35,9 +35,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 });
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:InstrumentationKey"]);
 builder.Services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
-builder.Services.AddGraphQLServer()
-    .RegisterService<CategoryService>()
-            .AddQueryType<Query>();
 
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
@@ -55,6 +52,10 @@ builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 // Configure Entity Framework with SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
+
+builder.Services.AddGraphQLServer()
+    .RegisterService<CategoryService>()
+            .AddQueryType<Query>();
 
 builder.Services.AddSwaggerGen(options =>
 {

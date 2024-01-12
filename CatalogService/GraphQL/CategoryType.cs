@@ -13,7 +13,7 @@ namespace CatalogService.GraphQL
         }
     }
 
-    public class QueryType : ObjectType<Query>
+    public class CategoryQueryType : ObjectType<Query>
     {
         protected override void Configure(IObjectTypeDescriptor<Query> descriptor)
         {
