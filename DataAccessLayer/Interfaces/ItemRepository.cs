@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,22 @@ namespace DataAccessLayer.Interfaces
         public IEnumerable<Item> List()
         {
             return _dbContext.Items;
+        }
+
+        public IEnumerable<ItemWithCategory> GetItemsWithCategory()
+        {
+            var items = List();
+            var itemsList = new List<ItemWithCategory>();
+
+            // Fetch categories for each item
+            foreach (var item in items)
+            {
+                ItemWithCategory itemWithCategory = new ItemWithCategory(item);
+                itemWithCategory.Category = _dbContext.Categories.Where(category => category.Id == item.CategoryId).FirstOrDefault() ?? new Category();
+                itemsList.Add(itemWithCategory);
+            }
+
+            return itemsList;
         }
         public Item? Get(int id)
         {

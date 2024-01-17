@@ -53,9 +53,14 @@ builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
 
-builder.Services.AddGraphQLServer()
-    .RegisterService<CategoryService>()
-            .AddQueryType<Query>();
+builder.Services.AddGraphQL(sp =>
+{
+    var schema = SchemaBuilder.New()
+        .AddQueryType<Query>()
+        .Create();
+
+    return schema;
+});
 
 builder.Services.AddSwaggerGen(options =>
 {

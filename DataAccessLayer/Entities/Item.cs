@@ -16,8 +16,34 @@ namespace DataAccessLayer.Entities
         public int CategoryId { get; set; }
         public decimal Price { get; set; }
         public int Amount { get; set; }
-    }
 
+    }
+    public class ItemWithCategory
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+
+        [MaxLength(50)]
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; }
+        public string? Image { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+        public decimal Price { get; set; }
+        public int Amount { get; set; }
+
+        public ItemWithCategory(Item item)
+        {
+            Id = item.Id;
+            Name = item.Name;
+            Description = item.Description;
+            Image = item.Image;
+            CategoryId = item.CategoryId;
+            Price = item.Price;
+            Amount = item.Amount;
+        }
+    }
     public class ItemResponse : Item
     {
         public ItemResponse(Item item)

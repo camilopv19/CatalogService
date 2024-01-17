@@ -16,6 +16,7 @@ namespace BusinessLogicLayer.CoreLogic
             _repository = repository;
         }
         public IEnumerable<ItemResponse> List(int? categoryId, int? page) => _repository.List(categoryId, page);
+        public IEnumerable<ItemWithCategory> GetItemsWithCategory() => _repository.GetItemsWithCategory();
         public IEnumerable<Item> List() => _repository.List();
 
         public Item? Get(int id) => _repository.Get(id);

@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Entities;
+﻿using BusinessLogicLayer.CoreLogic;
+using DataAccessLayer.Data;
+using DataAccessLayer.Entities;
 
 namespace CatalogService.GraphQL
 {
@@ -15,11 +17,5 @@ namespace CatalogService.GraphQL
             descriptor.Field(c => c.Amount).Type<IntType>();
         }
     }
-    public class ItemQueryType : ObjectType<Query>
-    {
-        protected override void Configure(IObjectTypeDescriptor<Query> descriptor)
-        {
-            descriptor.Field(q => q.GetItems()).Type<ListType<ItemType>>();
-        }
-    }
+
 }
