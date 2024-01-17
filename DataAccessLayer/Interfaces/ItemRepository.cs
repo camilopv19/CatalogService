@@ -32,7 +32,7 @@ namespace DataAccessLayer.Interfaces
             foreach (var item in items)
             {
                 ItemWithCategory itemWithCategory = new ItemWithCategory(item);
-                itemWithCategory.Category = _dbContext.Categories.Where(category => category.Id == item.CategoryId).FirstOrDefault() ?? new Category();
+                itemWithCategory.Category = _dbContext.Categories.Where(category => category.Id == item.CategoryId).FirstOrDefault() ?? new Category(item.CategoryId);
                 itemsList.Add(itemWithCategory);
             }
 

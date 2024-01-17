@@ -13,5 +13,11 @@ namespace DataAccessLayer.Entities
         public string Name { get; set; } = string.Empty;
         public string? Image { get; set; }
         public int? ParentCategoryId { get; set; }
+
+        public Category(int id)
+        {
+            Id = id;
+            Name = "No Category was Found";
+        }
     }
 }
